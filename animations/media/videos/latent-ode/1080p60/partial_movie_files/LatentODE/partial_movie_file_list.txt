@@ -1,0 +1,10 @@
+# This file is used internally by FFMPEG.
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/latent-ode/1080p60/partial_movie_files/LatentODE/2033226515_3563743943_3248211358.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/latent-ode/1080p60/partial_movie_files/LatentODE/2069888829_284796683_877253225.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/latent-ode/1080p60/partial_movie_files/LatentODE/2069888829_1772891280_3160466534.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/latent-ode/1080p60/partial_movie_files/LatentODE/2069888829_3674643494_2845484462.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/latent-ode/1080p60/partial_movie_files/LatentODE/2069888829_1295307286_2829694359.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/latent-ode/1080p60/partial_movie_files/LatentODE/2069888829_1934798691_2573177706.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/latent-ode/1080p60/partial_movie_files/LatentODE/2069888829_2229481068_2024925530.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/latent-ode/1080p60/partial_movie_files/LatentODE/2069888829_2879955500_3585252091.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/latent-ode/1080p60/partial_movie_files/LatentODE/2069888829_390941572_2165143375.mp4'

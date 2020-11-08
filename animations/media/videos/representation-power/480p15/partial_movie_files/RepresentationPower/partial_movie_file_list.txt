@@ -1,0 +1,7 @@
+# This file is used internally by FFMPEG.
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/representation-power/480p15/partial_movie_files/RepresentationPower/545350532_368853160_1239885676.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/representation-power/480p15/partial_movie_files/RepresentationPower/2113110942_523459854_1146549008.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/representation-power/480p15/partial_movie_files/RepresentationPower/2113110942_2678116108_1529854842.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/representation-power/480p15/partial_movie_files/RepresentationPower/2113110942_2000040639_4078235239.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/representation-power/480p15/partial_movie_files/RepresentationPower/2113110942_2314855713_2474679464.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/representation-power/480p15/partial_movie_files/RepresentationPower/2113110942_861823899_4208772348.mp4'

@@ -1,0 +1,2 @@
+# This file is used internally by FFMPEG.
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/spiral-ode/500p60/partial_movie_files/SpiralODE/1968893840_1593548423_1419209526.mp4'

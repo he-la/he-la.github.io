@@ -1,0 +1,8 @@
+# This file is used internally by FFMPEG.
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/runge-kutta/480p15/partial_movie_files/RungeKuttaStep/2922524824_1593986439_4200821897.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/runge-kutta/480p15/partial_movie_files/RungeKuttaStep/3874285423_1577129796_1919405595.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/runge-kutta/480p15/partial_movie_files/RungeKuttaStep/3874285423_3909510061_569040320.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/runge-kutta/480p15/partial_movie_files/RungeKuttaStep/3874285423_1529089390_3993037676.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/runge-kutta/480p15/partial_movie_files/RungeKuttaStep/3874285423_686608470_1048363514.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/runge-kutta/480p15/partial_movie_files/RungeKuttaStep/3874285423_1468854208_3247690518.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/runge-kutta/480p15/partial_movie_files/RungeKuttaStep/3874285423_1815450663_4042872952.mp4'

@@ -1,0 +1,6 @@
+# This file is used internally by FFMPEG.
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/adjoint-method/480p15/partial_movie_files/AdjointMethod/545350532_3235484955_1004446480.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/adjoint-method/480p15/partial_movie_files/AdjointMethod/2113110942_3235484955_3368025757.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/adjoint-method/480p15/partial_movie_files/AdjointMethod/2113110942_1061093625_1612584078.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/adjoint-method/480p15/partial_movie_files/AdjointMethod/2113110942_3972803965_1836439479.mp4'
+file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/adjoint-method/480p15/partial_movie_files/AdjointMethod/2113110942_861823899_4267321082.mp4'

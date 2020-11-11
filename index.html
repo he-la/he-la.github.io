@@ -89,7 +89,7 @@
             <video data-manim="runge-kutta/1080p60/RungeKuttaStep"></video>
             <ul class="fragment">
               <li>$\mathbf{x}(t + \Delta t) \approx \mathbf{x}(t) + \int_t^{t +
-                \Delta t} \color{#83C167}{\mathrm{poly}(\tau)} d\tau$</li>
+                \Delta t} \color{#83C167}{\mathrm{poly}(\tau)} d\tau$ <small style="line-height: 3.5em; margin-left: 2em;">(simplification)</small></li>
             </ul>
           </section>
           <section>
@@ -166,6 +166,10 @@
             <ul>
               <li class="fragment" data-fragment-index="3">Dynamics might also depend on time $t$</li>
               <li class="fragment" data-fragment-index="4">Defined as <b>neural ODE</b></li>
+              <li class="fragment" data-fragment-index="5">Goal: Replace $\begin{bmatrix}
+                \theta_1 & \theta_2 \\
+                \theta_3 & \theta_4
+                \end{bmatrix}$ with $\sigma(\mathbf{W_l} \sigma(\cdots [\sigma(\mathbf{W_0} [\mathbf{x}^T, t]^T)^T, t]^T))$</li>
             </ul>
           </section>
           <section data-auto-animate>
@@ -190,7 +194,8 @@
           <section data-auto-animate>
             <h3>Optimization</h3>
             <ul>
-              <li class="fragment">Notation: $\mathbf{x}(t_1; \theta) = \mathbf{x_0} + \int_0^{t_1} f(\mathbf{x}(t), t; \theta) dt$</li>
+              <li class="fragment fade-in-then-out hide-after-current">Notation: $\mathbf{x}(t_1; \theta) = \mathbf{x_0} + \int_0^{t_1} f(\mathbf{x}(t), t; \theta) dt$</li>
+              <li class="fragment fade-in">Notation: $\mathbf{x}(t_1; \theta) = \mathbf{x_0} + \int_0^{t_1} \overbrace{f(\mathbf{x}(t), t; \theta)}^\text{neural net} dt$</li>
               <li class="fragment">Loss: $L(\mathbf{x}(t_1; \theta)),\ L: \mathbb{R}^n \to \mathbb{R}$</li>
               <li class="fragment fade-in-then-out hide-after-current">Gradient: $\partial_\theta L(\mathbf{x}(1; \theta))$</li>
               <li class="fragment fade-in">Chain Rule: $\partial_\theta L(\mathbf{x};
@@ -275,7 +280,6 @@
             <h3>Second Attempt</h3>
             <h4>Backprop. through ODE solver</h4>
             <ul>
-              <li class="fragment">Maybe inaccurate: $\color{#83C167}{\mathrm{poly}_i(\tau; \theta)}$ are only approximations</li>
               <li class="fragment">Expensive: store all $\color{#83C167}{\mathrm{poly}_i(\tau; \theta)}$</li>
               <li class="fragment">Forced step size from $\mathbf{x}(1; \theta)$</li>
               <li class="fragment">From before:
@@ -309,23 +313,23 @@
               </li>
             </ul>
           </section>
-          <section data-auto-animate>
-            <h3>Adjoint Method</h3>
-            Given
-            <ul>
-              <li class="fragment">$\mathbf{x}(0)$: Initial State</li>
-              <li class="fragment">$\frac{d}{dt}\mathbf{x}(t; \theta) = f(\mathbf{x}(t), t;
-                \theta)$: ODE/neural network</li>
-              <li class="fragment">$L(\mathbf{x}(1; \theta)) \in \mathbb{R}$: Loss depending only on final state <small>(can
-                be easily generalized to loss at finitely many intermediate states)</small></li>
-            </ul>
-            <p class="fragment">
-              we seek
-              $$
-              \partial_\theta L(\mathbf{x}(1; \theta))
-              $$
-            </p>
-          </section>
+          <!-- <section data-auto-animate>
+               <h3>Adjoint Method</h3>
+               Given
+               <ul>
+               <li class="fragment">$\mathbf{x}(0)$: Initial State</li>
+               <li class="fragment">$\frac{d}{dt}\mathbf{x}(t; \theta) = f(\mathbf{x}(t), t;
+               \theta)$: ODE/neural network</li>
+               <li class="fragment">$L(\mathbf{x}(1; \theta)) \in \mathbb{R}$: Loss depending only on final state <small>(can
+               be easily generalized to loss at finitely many intermediate states)</small></li>
+               </ul>
+               <p class="fragment">
+               we seek
+               $$
+               \partial_\theta L(\mathbf{x}(1; \theta))
+               $$
+               </p>
+               </section> -->
           <section data-auto-animate>
             <h3>Adjoint Method</h3>
             <small>
@@ -365,7 +369,7 @@
                   </li>
                 </small>
                 <li>
-                  One can show: $\partial_{\mathbf{z}(t; \theta)}L =: \mathbf{a}(t) = \begin{bmatrix} \partial_{\mathbf{x}(t;
+                  One can show: $\partial_{\mathbf{z}(t; \theta)}L(\mathbf{z}(1; \theta)) =: \mathbf{a}(t) = \begin{bmatrix} \partial_{\mathbf{x}(t;
                   \theta)} L & \partial_{\theta(t)} L \end{bmatrix}$ is governed by the ODE
                   <div class="r-stack">
                     <span class="fragment fade-in-then-out">
@@ -540,7 +544,7 @@
             <ul>
               <li class="fragment">Given data points $\mathbf{x_i}(t_j)$</li>
               <li class="fragment">Learn ODE to extrapolate $\mathbf{x_i}(t)$ for all $t$</li>
-              <li class="fragment">Loss: $||\mathbf{x_i}(t_j) - \mathrm{ODE}(\mathbf{x_i}(0), t_j)||_2$
+              <li class="fragment">Loss: $||\mathbf{x_i}(t_j) - \mathrm{ODE}(\mathbf{x_i}(0), t_j)||_2^2$
                 <ul>
                   <li>MSE between data and learned trajectory at points $t_j$</li>
                 </ul>
@@ -688,7 +692,9 @@ class Net(nn.Module):
           <ul>
             <li class="fragment" data-fragment-index="0">Replace ResNets
               <ul>
-                <li class="fragment" data-fragment-index="1">ResNet: $\mathbf{x_{n + 1}} = \mathbf{x_n} + f(\mathbf{x})$ looks like step in Euler ODE solver</li>
+                <li class="fragment" data-fragment-index="1">ResNet:
+                $\mathbf{x_{n + 1}} = \mathbf{x_n} + f(\mathbf{x_n})$ looks like
+                step in Euler ODE solver</li>
                 <li class="fragment" data-fragment-index="2">Motivates (with some mental gymnastics) playing with ODE nets instead of ResNets</li>
                 <li class="fragment" data-fragment-index="3">Can use convolutional layers</li>
               </ul>
@@ -703,7 +709,8 @@ class Net(nn.Module):
             <ul>
               <li class="fragment"><b>Stiffness</b>: Recall: Stiff ODEs cause solvers to diverge exponentially
                 <ul>
-                  <li class="fragment">Remedied by (expensive, typically implicit) integrators (recall: <em>absolute stability</em>)</li>
+                  <li class="fragment">Remedied by (expensive, implicit)
+                  integrators (recall: <em>absolute stability</em>)</li>
                   <li class="fragment">Cannot know if learned ODE is stiff</li>
                   <li class="fragment">Must assume worst-case; always use expensive, <em>L-stable</em> integrators (painfully slow! 12h for MNIST)</li>
                 </ul>

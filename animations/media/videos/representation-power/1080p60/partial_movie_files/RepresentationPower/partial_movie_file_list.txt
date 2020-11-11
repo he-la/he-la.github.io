@@ -1,7 +1,7 @@
 # This file is used internally by FFMPEG.
-file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/representation-power/1080p60/partial_movie_files/RepresentationPower/2033226515_368853160_1239885676.mp4'
-file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/representation-power/1080p60/partial_movie_files/RepresentationPower/2069888829_523459854_1146549008.mp4'
-file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/representation-power/1080p60/partial_movie_files/RepresentationPower/2069888829_2678116108_1529854842.mp4'
-file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/representation-power/1080p60/partial_movie_files/RepresentationPower/2069888829_2000040639_803998870.mp4'
-file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/representation-power/1080p60/partial_movie_files/RepresentationPower/2069888829_1101170007_1535353616.mp4'
-file 'file:/home/henrik/docs/ml-seminar/animations/media/videos/representation-power/1080p60/partial_movie_files/RepresentationPower/2069888829_861823899_4078079506.mp4'
+file 'file:/home/henrik/docs/ml-seminar/presentation/animations/media/videos/representation-power/1080p60/partial_movie_files/RepresentationPower/2033226515_3003696503_2452923135.mp4'
+file 'file:/home/henrik/docs/ml-seminar/presentation/animations/media/videos/representation-power/1080p60/partial_movie_files/RepresentationPower/2069888829_523459854_3947745999.mp4'
+file 'file:/home/henrik/docs/ml-seminar/presentation/animations/media/videos/representation-power/1080p60/partial_movie_files/RepresentationPower/2069888829_2678116108_3001333281.mp4'
+file 'file:/home/henrik/docs/ml-seminar/presentation/animations/media/videos/representation-power/1080p60/partial_movie_files/RepresentationPower/2069888829_2000040639_2484152727.mp4'
+file 'file:/home/henrik/docs/ml-seminar/presentation/animations/media/videos/representation-power/1080p60/partial_movie_files/RepresentationPower/2069888829_1101170007_1452283639.mp4'
+file 'file:/home/henrik/docs/ml-seminar/presentation/animations/media/videos/representation-power/1080p60/partial_movie_files/RepresentationPower/2069888829_861823899_2309353931.mp4'

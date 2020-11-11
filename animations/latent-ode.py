@@ -114,37 +114,51 @@ class LatentODE(Scene):
         right = (latent_time_arrow.get_end() + 1 * LEFT)[0]
 
         travelling_z_dot = Dot(
-            color=GREEN).move_to(latent_time_arrow.get_start() + t[1] * RIGHT).set_x(0.5 * (left + right))
+            color=GREEN).move_to(latent_time_arrow.get_start() +
+                                 t[1] * RIGHT).set_x(0.5 * (left + right))
         travelling_z_label = MathTex("\\mathbf{z}(t)").move_to(
             travelling_z_dot).align_to(travelling_z_dot, DOWN).shift(0.25 * UP)
 
         zgroup = VGroup(travelling_z_dot, travelling_z_label)
 
         _zt = 0
+
         def travel_z(zgroup, dt):
             nonlocal _zt
             _zt += dt
             alpha = 0.5 * (sin(_zt) + 1)
             zgroup.set_x((1 - alpha) * left + alpha * right)
 
-        self.play(ShowCreation(zgroup))
+        def get_zbrace():
+            zbrace = Brace(VGroup(z0_dot, travelling_z_dot), direction=UP).shift(0.125 * DOWN)
+            ztext = zbrace.get_text('\\footnotesize Learned ODE')
+            return VGroup(zbrace, ztext)
+
+        zbrace = always_redraw(get_zbrace)
+        self.play(LaggedStart(
+            ShowCreation(zgroup),
+            ShowCreation(zbrace)
+        ))
 
         travelling_z_arrow = Arrow(travelling_z_label.get_top() + 0.125 * DOWN,
                                    travelling_z_label.get_top() + 0.875 * UP)
-        travelling_z_decode_label = MathTex("\\mathbb{P}[\\mathbf{x}(t) \\mid \\mathbf{z}(t)]").move_to(travelling_z_arrow.get_end()).align_to(travelling_z_arrow.get_end(), DOWN).shift(0.125 * UP)
+        travelling_z_decode_label = MathTex(
+            "\\mathbb{P}[\\mathbf{x}(t) \\mid \\mathbf{z}(t)]").move_to(
+                travelling_z_arrow.get_end()).align_to(
+                    travelling_z_arrow.get_end(), DOWN).shift(0.125 * UP)
         x = travelling_z_decode_label.get_top().copy()
         x[1] = data_time_arrow.get_y()
-        travelling_z_decode = Arrow(travelling_z_decode_label.get_top(), x,
+        travelling_z_decode = Arrow(travelling_z_decode_label.get_top(),
+                                    x,
                                     color=GREEN)
         travelling_x_dot = Dot(color=GREEN).move_to(x)
-        travelling_x_label = MathTex("\\mathbf{x}(t)").move_to(travelling_x_dot).align_to(travelling_x_dot, DOWN).shift(0.25 * UP)
+        travelling_x_label = MathTex("\\mathbf{x}(t)").move_to(
+            travelling_x_dot).align_to(travelling_x_dot, DOWN).shift(0.25 * UP)
 
-        decode_group = VGroup(
-            travelling_z_arrow, travelling_z_decode_label, travelling_z_decode,
-            travelling_x_dot, travelling_x_label
-        )
-        
-        
+        decode_group = VGroup(travelling_z_arrow, travelling_z_decode_label,
+                              travelling_z_decode, travelling_x_dot,
+                              travelling_x_label)
+
         self.play(ShowCreation(decode_group))
         self.remove(decode_group)
         zgroup.add(decode_group)

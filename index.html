@@ -48,20 +48,52 @@
           <small>Ricky T. Q. Chen, Yulia Rubanova, Jesse Bettencourt, and David Duvenaud, 2018.</small>
 
           <br>
+          <br>
           <small>Presented by Henrik Laxhuber</small>
           <br>
           <br>
           <small>View slides at <a href="https://he-la.github.io">he-la.github.io</a></small>
         </section>
 				<section>
-          <section>
+				  <section>
+            <h3>Battle Plan</h3>
+            <ul>
+              <li class="fragment">ODEs and numerical integrators</li>
+              <li class="fragment">Optimizing ODE parameters</li>
+              <li class="fragment">Generative time series modelling using ODEs</li>
+              <li class="fragment">Non-obvious use cases</li>
+              <li class="fragment">Problems and Discussion</li>
+            </ul>
+          </section>
+          <section data-auto-animate>
+            <h3>ODEs and numerical integrators</h3>
+            
             Recall: An ODE is a set of functions given by their (time) derivative
-            $$
-            \frac{d}{dt} \mathbf{x}(t) = f(\mathbf{x}(t), t)
-            $$
+            <p class="fragment">
+              $$
+              \frac{d}{dt} \mathbf{x}(t) = f(\mathbf{x}(t), t)
+              $$
+            </p>
+            <p class="fragment">
+              $$
+              \mathbf{x}(t) = \mathbf{x_0} + \int_{t_0}^t f(\mathbf{x}(\tau), \tau) d\tau
+              $$
+            </p>
+          </section>
+          <section data-auto-animate="">
+            <h3>ODEs and numerical integrators</h3>
+            <video data-manim="car/1080p60/Car"></video>
+          </section>
+          <section data-auto-animate="">
+            <h3>ODEs and numerical integrators</h3>
+            <video data-manim="runge-kutta/1080p60/RungeKuttaStep"></video>
+            <ul class="fragment">
+              <li>$\mathbf{x}(t + \Delta t) \approx \mathbf{x}(t) + \int_t^{t +
+                \Delta t} \color{#83C167}{\mathrm{poly}(\tau)} d\tau$</li>
+            </ul>
           </section>
           <section>
-            <h3>Example: Spiral ODE</h3>
+            <h3>Working Example: Spiral ODE</h3>
             
             <div class="row">
               <div class="col" style="margin: auto 0;">
@@ -75,28 +107,26 @@
               </div>
               <video width="480" height="480" src="./animations/media/videos/spiral-ode/1080p60/SpiralODE.mp4" data-autoplay></video>
             </div>
-
-            Recall: Many established methods exist for numerically computing
-            $\mathbf{x}(t)$ at any time $t$ given some initial state
-            $\mathbf{x}(0)$.
           </section>
+        </section>
+
+        <section>
           <section>
             <h3>Learning a known ODE</h3>
-
             <ul>
-              <li>
-                Given a known model
+              <li class="fragment">
+                Given a known model class
                 $$
                 \frac{d}{dt} \mathbf{x} = \begin{bmatrix}
-                -\alpha & -\beta \\
-                \beta & -\alpha
+                \theta_1 & \theta_2 \\
+                \theta_3 & \theta_4
                 \end{bmatrix}
                 \mathbf{x}
                 $$
-                and some data points/trajectories $((\mathbf{x}_{i, t})_{t \in [T]})_{i \in [n]}$,
-                we seek to "learn" the ODE by fitting $\alpha, \beta$.
               </li>
-              <li>Use established numerical methods (discussed soon)</li>
+              <li class="fragment">and some samples $((\mathbf{x}_{i, t})_{t \in [T]})_{i \in [n]}$</li>
+              <li class="fragment">we want to "learn" the ODE describing $\mathbf{x}(t)$</li>
+              <li class="fragment">by optimizing $\theta$</li>
             </ul>
           </section>
           <!-- probably not useful to discuss the adjoint method, just state that established methods exist -->
@@ -109,77 +139,174 @@
                </ul>
                </section> -->
           <section>
-            <div class="media-placeholder"></div>
+            <video src="media/known-ode-fit.mp4" data-autoplay></video>
           </section>
         </section>
         <section>
-          <section>
+          <section data-auto-animate>
             <h3>What if we don't know how to parametrise $\frac{d}{dt} \mathbf{x}$?</h3>
             <p class="fragment" data-fragment-index="1">Use a Neural Network to learn $\frac{d}{dt} \mathbf{x}$!</p>
             <div class="r-stack">
-            <p class="fragment hide-after-current" data-fragment-index="2">
-              $$
-              \frac{d}{dt} \mathbf{x} = \sigma(\mathbf{W_l} \sigma(\cdots \sigma(\mathbf{W_0 x})))
-              $$
-            </p>
-            <p class="fragment hide-after-current" data-fragment-index="3">
-              $$
-              \frac{d}{dt} \mathbf{x} = \sigma(\mathbf{W_l} \sigma(\cdots \sigma(\mathbf{W_0 x})))
-              $$
-            </p>
-            <p class="fragment" data-fragment-index="4">
-              $$
-              \frac{d}{dt} \mathbf{x} = \sigma(\mathbf{W_l} \sigma(\cdots [\sigma(\mathbf{W_0} \color{red}{[\mathbf{x}^T, t]^T})^T, t]^T))
-              $$
-            </p>
+              <p class="fragment fade-in-then-out" data-fragment-index="2">
+                $$
+                \frac{d}{dt} \mathbf{x} = \sigma(\mathbf{W_l} \sigma(\cdots \sigma(\mathbf{W_0 x})))
+                $$
+              </p>
+              <p class="fragment fade-in-then-out" data-fragment-index="3">
+                $$
+                \frac{d}{dt} \mathbf{x} = \sigma(\mathbf{W_l} \sigma(\cdots \sigma(\mathbf{W_0 x})))
+                $$
+              </p>
+              <p class="fragment" data-fragment-index="4">
+                $$
+                \frac{d}{dt} \mathbf{x} = \sigma(\mathbf{W_l} \sigma(\cdots [\sigma(\mathbf{W_0} \color{red}{[\mathbf{x}^T, t]^T})^T, t]^T))
+                $$
+              </p>
             </div>
             <ul>
               <li class="fragment" data-fragment-index="3">Dynamics might also depend on time $t$</li>
+              <li class="fragment" data-fragment-index="4">Defined as <b>neural ODE</b></li>
             </ul>
+          </section>
+          <section data-auto-animate>
+            <h3>What if we don't know how to parametrise $\frac{d}{dt} \mathbf{x}$?</h3>
+            The Goal:<br>
+            <img src="media/vae-vis-paper.png" class="shadow" height="500px"></img>
           </section>
         </section>
         <section>
-          <section>
+          <section data-auto-animate>
+            <h3>Optimization</h3>
+            How to optimize weights of an ODE?
+            <br>
+            <br>
+            <h4>Battle Plan</h4>
+            <ul>
+              <li class="fragment">Failed Attempt 1</li>
+              <li class="fragment">Failed Attempt 2</li>
+              <li class="fragment">Success</li>
+            </ul>
+          </section>
+          <section data-auto-animate>
             <h3>Optimization</h3>
             <ul>
               <li class="fragment">Notation: $\mathbf{x}(t_1; \theta) = \mathbf{x_0} + \int_0^{t_1} f(\mathbf{x}(t), t; \theta) dt$</li>
-              <li class="fragment">Loss: $L(\mathbf{x}(t_1; \theta)),\ L: \mathbf{R}^n \to \mathbf{R}$</li>
-              <li class="fragment hide-after-current">Gradient: $\frac{d}{d\theta} L(\mathbf{x}; \theta)$</li>
-              <li class="fragment">Chain Rule: $\frac{d}{d\theta} L(\mathbf{x};
-                \theta) = \underbrace{\frac{d}{d\mathbf{x}(t_1; \theta)} L(\mathbf{x}(t_1; \theta))}_\text{standard} \cdot \underbrace{\frac{d}{d\theta}
-                \mathbf{x}(t_1; \theta)}_\text{?}$</li>
-              <li class="fragment">Idea: Backpropagate through ODE solver?</li>
-            </ul>
-          </section>
-          
-          <section data-transition="none-out">
-            <h3>Backprop. through ODE solver</h3>
-            Recall how RK SSMs work:
-            <video data-manim="runge-kutta/1080p60/RungeKuttaStep"></video>
-          </section>
-
-          <section data-transition="none-in">
-            <h3>Backprop. through ODE solver</h3>
-            <ul>
-              <li>Numerical trajectory is a polynomial spline approximating the
-                original function</li>
-              <li class="fragment">Backpropagating through the ODE solver would
-                compute the derivative of the approximating polynomial</li>
-              <li class="fragment">Possibly inaccurate; expensive
-                <ul>
-                  <li>Need to store all (<em>many</em>) function evaluations for backpropagation</li>
-                </ul>
-              </li>
+              <li class="fragment">Loss: $L(\mathbf{x}(t_1; \theta)),\ L: \mathbb{R}^n \to \mathbb{R}$</li>
+              <li class="fragment fade-in-then-out hide-after-current">Gradient: $\partial_\theta L(\mathbf{x}(1; \theta))$</li>
+              <li class="fragment fade-in">Chain Rule: $\partial_\theta L(\mathbf{x};
+                \theta) = \underbrace{\partial_{\mathbf{x}(t_1; \theta)} L(\mathbf{x}(t_1; \theta))}_\text{standard} \cdot \underbrace{\partial_\theta
+                \mathbf{x}(t_1; \theta)}_\text{need this}$</li>
             </ul>
           </section>
           <section>
-            <h3>We can do better!</h3>
-            <p>Adjoint Method</p>
+            <h3>First Attempt</h3>
+            <small>
+              Given $\frac{d}{dt}\mathbf{x}(t; \theta) = f(\mathbf{x}(t), t;
+              \theta)$ we seek $\partial_\theta L(\mathbf{x}(1; \theta))$
+            </small>
+            <div class="r-stack">
+              <p class="fragment fade-in-then-out" style="font-size: 70%;">
+                $$
+                \begin{align*}
+                &\partial_\theta L(\mathbf{x}(1; \theta)) \\
+                &= \partial_{\mathbf{x}(1; \theta)} L(\mathbf{x}(1); \theta) \cdot \partial_\theta \mathbf{x}(1; \theta) \\
+                &\phantom{\partial_{\mathbf{x}(1; \theta)} L(\mathbf{x}(1); \theta)
+                \cdot \partial_\theta \left( \mathbf{x}(0) + \int_0^1 f(\mathbf{x}(t), t, \theta) dt \right)}
+                \end{align*}
+                $$
+              </p>
+              <p class="fragment fade-in-then-out" style="font-size: 70%;">
+                $$
+                \begin{align*}
+                &\partial_\theta L(\mathbf{x}(1; \theta)) \\
+                &= \partial_{\mathbf{x}(1; \theta)} L(\mathbf{x}(1); \theta) \cdot \partial_\theta \mathbf{x}(1; \theta) \\
+                &= \partial_{\mathbf{x}(1; \theta)} L(\mathbf{x}(1); \theta)
+                \cdot \partial_\theta \left( \mathbf{x}(0) + \int_0^1 f(\mathbf{x}(t), t, \theta) dt \right)
+                \end{align*}
+                $$
+              </p>
+              <p class="fragment fade-in-then-out" style="font-size: 70%;">
+                $$
+                \begin{align*}
+                &\partial_\theta L(\mathbf{x}(1; \theta)) \\
+                &= \partial_{\mathbf{x}(1; \theta)} L(\mathbf{x}(1); \theta)
+                \cdot \partial_\theta \left( \mathbf{x}(0) + \int_0^1 f(\mathbf{x}(t), t, \theta) dt \right) \\
+                &= \partial_{\mathbf{x}(1; \theta)} L(\mathbf{x}(1; \theta)) \cdot \int_0^1 \partial_\theta
+                f(\mathbf{x}(t), t; \theta) dt \tag{Leibniz's rule}
+                \end{align*}
+                $$
+                where we assume that $f$ is $C^1$ in $t, \theta$.
+              </p>
+              <p class="fragment" style="font-size: 70%;">
+                $$
+                \begin{align*}
+                &\partial_\theta L(\mathbf{x}(1; \theta)) \\
+                &= \partial_{\mathbf{x}(1; \theta)} L(\mathbf{x}(1); \theta)
+                \cdot \partial_\theta \left( \mathbf{x}(0) + \int_0^1 f(\mathbf{x}(t), t, \theta) dt \right) \\
+                &= \partial_{\mathbf{x}(1; \theta)} L(\mathbf{x}(1; \theta)) \cdot \underbrace{\int_0^1 \partial_\theta
+                f(\mathbf{x}(t), t; \theta) dt}_\text{expensive} \tag{Leibniz's rule}
+                \end{align*}
+                $$
+                where we assume that $f$ is $C^1$ in $t, \theta$.
+              </p>
+            </div>
+            <br>
             <ul>
-              <li class="fragment">Established method for computing $\frac{d}{d\theta}
-                L(\mathrm{ODE}(t_0, t_1; \theta)),\ L: \mathbb{R}^n \to
-                \mathbb{R}$</li>
-              <li class="fragment">New: Application to neural networks with <em>many</em> parameters</li>
+              <li class="fragment">If $\theta \in \mathbb{R}^p$, requires
+                expensive integration over $p \times p$ Jacobian</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Second Attempt</h3>
+            From ODE solver:
+            <p class="fragment">
+              $$
+              \begin{aligned}
+              \mathbf{x}(1; \theta) \approx& \mathbf{x}(0) + \int_0^{\eta_1} \color{#83C167}{\mathrm{poly}_1(\tau; \theta)} d\tau + \int_{\eta_1}^{\eta_2} \color{#83C167}{\mathrm{poly}_2(\tau; \theta)} d\tau \\
+              &+ \ldots + \int_{\eta_k}^1 \color{#83C167}{\mathrm{poly}_k(\tau; \theta)} d\tau
+              \end{aligned}
+              $$
+            </p>
+            <ul class="fragment">
+              <li>Backprop. through ODE solver?</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Second Attempt</h3>
+            <h4>Backprop. through ODE solver</h4>
+            <ul>
+              <li class="fragment">Maybe inaccurate: $\color{#83C167}{\mathrm{poly}_i(\tau; \theta)}$ are only approximations</li>
+              <li class="fragment">Expensive: store all $\color{#83C167}{\mathrm{poly}_i(\tau; \theta)}$</li>
+              <li class="fragment">Forced step size from $\mathbf{x}(1; \theta)$</li>
+              <li class="fragment">From before:
+                $\partial_\theta L(\mathbf{x}(1; \theta)) = \partial_{\mathbf{x}(1; \theta)} L \cdot \int_0^1 \partial_\theta f(\mathbf{x}(t), t; \theta) dt$
+                <ul>
+                  <li>Is an ODE</li>
+                  <li>Might get away with smaller step size</li>
+                  <li class="fragment">The dream:
+                    <span class="r-stack">
+                      <span class="fragment fade-in-then-out">
+                        $\partial_\theta L(\mathbf{x}(1; \theta)) = \int_0^1
+                        \color{red}{(\partial_{\mathbf{x}(1; \theta)} L)} \cdot
+                        \partial_\theta f(\mathbf{x}(t), t; \theta) dt$
+                      </span>
+                      <span class="fragment fade-in-then-out">
+                        $\partial_\theta L(\mathbf{x}(1; \theta)) = \int_0^1
+                        \underbrace{\color{red}{(\partial_{\mathbf{x}(1;
+                        \theta)} L)}}_\text{row vec.} \cdot
+                        \underbrace{\partial_\theta f(\mathbf{x}(t), t;
+                        \theta)}_\text{matrix} dt$
+                      </span>
+                      <span class="fragment fade-in">
+                        $\partial_\theta L(\mathbf{x}(1; \theta)) = \int_0^1
+                        \underbrace{\color{red}{(\partial_{\mathbf{x}(1;
+                        \theta)} L)} \cdot \partial_\theta f(\mathbf{x}(t), t;
+                        \theta)}_\text{row vec.} dt$
+                      </span>
+                    </span>
+                  </li>
+                </ul>
+              </li>
             </ul>
           </section>
           <section data-auto-animate>
@@ -205,135 +332,87 @@
               Given $\frac{d}{dt}\mathbf{x}(t; \theta) = f(\mathbf{x}(t), t;
               \theta)$ we seek $\partial_\theta L(\mathbf{x}(1; \theta))$
             </small>
-            <br> Idea: Chain Rule, again<br>
-            <div class="r-stack">
-              <p class="fragment hide-after-current" style="font-size: 70%;">
-                $$
-                \begin{align*}
-                &\partial_\theta L(\mathbf{x}(1; \theta)) \\
-                &= \partial_{\mathbf{x}(1; \theta)} L(\mathbf{x}(1); \theta) \cdot \partial_\theta \mathbf{x}(1; \theta) \\
-                &\phantom{\partial_{\mathbf{x}(1; \theta)} L(\mathbf{x}(1); \theta)
-                \cdot \partial_\theta \left( \mathbf{x}(0) + \int_0^1 f(\mathbf{x}(t), t, \theta) dt \right)}
-                \end{align*}
-                $$
-              </p>
-              <p class="fragment hide-after-current" style="font-size: 70%;">
-                $$
-                \begin{align*}
-                &\partial_\theta L(\mathbf{x}(1; \theta)) \\
-                &= \partial_{\mathbf{x}(1; \theta)} L(\mathbf{x}(1); \theta) \cdot \partial_\theta \mathbf{x}(1; \theta) \\
-                &= \partial_{\mathbf{x}(1; \theta)} L(\mathbf{x}(1); \theta)
-                \cdot \partial_\theta \left( \mathbf{x}(0) + \int_0^1 f(\mathbf{x}(t), t, \theta) dt \right)
-                \end{align*}
-                $$
-              </p>
-              <p class="fragment hide-after-current" style="font-size: 60%;">
-                $$
-                \begin{align*}
-                &\partial_\theta L(\mathbf{x}(1; \theta)) \\
-                &= \partial_{\mathbf{x}(1; \theta)} L(\mathbf{x}(1); \theta)
-                \cdot \partial_\theta \left( \mathbf{x}(0) + \int_0^1 f(\mathbf{x}(t), t, \theta) dt \right) \\
-                &= \partial_{\mathbf{x}(1; \theta)} L(\mathbf{x}(1; \theta)) \cdot \int_0^1 \partial_\theta
-                f(\mathbf{x}(t), t; \theta) dt \tag{Leibniz's rule}
-                \end{align*}
-                $$
-                where we assume that $f$ is $C^1$ in $t, \theta$.
-              </p>
-              <p class="fragment" style="font-size: 60%;">
-                $$
-                \begin{align*}
-                &\partial_\theta L(\mathbf{x}(1; \theta)) \\
-                &= \partial_{\mathbf{x}(1; \theta)} L(\mathbf{x}(1); \theta)
-                \cdot \partial_\theta \left( \mathbf{x}(0) + \int_0^1 f(\mathbf{x}(t), t, \theta) dt \right) \\
-                &= \partial_{\mathbf{x}(1; \theta)} L(\mathbf{x}(1; \theta)) \cdot \underbrace{\int_0^1 \partial_\theta
-                f(\mathbf{x}(t), t; \theta) dt}_\text{expensive} \tag{Leibniz's rule}
-                \end{align*}
-                $$
-                where we assume that $f$ is $C^1$ in $t, \theta$.
-              </p>
-            </div>
-            <br>
-            <ul>
-              <li class="fragment">If $\theta \in \mathbb{R}^p$, requires expensive integration over $p \times p$ Jacobian</li>
-              <li class="fragment">Ideally, we would like to move $\partial_{\mathbf{x}(1; \theta)} L$ inside of the integral to integrate only over a vector</li>
-            </ul>
-          </section>
-          <section data-auto-animate>
-            <h3>Adjoint Method</h3>
-            <small>
-              Given $\frac{d}{dt}\mathbf{x}(t; \theta) = f(\mathbf{x}(t), t;
-              \theta)$ we seek $\partial_\theta L(\mathbf{x}(1; \theta))$
-            </small>
 
-            <ul class="fragment hide-after-current">
-              <li>Construct new ODE containing $\theta$ as constant
-                $$
-                \frac{d}{dt} \mathbf{z}(t; \theta) :=
-                \begin{bmatrix}
-                f(\mathbf{x}(t), t; \theta) & \mathbf{0}
-                \end{bmatrix}^T =: \dot{\mathbf{z}}(\mathbf{x}(t), t; \theta)\\
-                \mathbf{z}(0; \theta) :=
-                \begin{bmatrix}
-                \mathbf{x}(0) & \theta
-                \end{bmatrix}^T
-                $$
-              </li>
-            </ul>
-            <ul class="fragment">
-              <small>
-                <li>
-                  Construct new ODE containing $\theta$ as constant
+            <div class="r-stack">
+              <ul class="fragment fade-in-then-out">
+                <li>Construct new ODE containing $\theta$ as constant
                   $$
                   \frac{d}{dt} \mathbf{z}(t; \theta) :=
                   \begin{bmatrix}
                   f(\mathbf{x}(t), t; \theta) & \mathbf{0}
-                  \end{bmatrix}^T =: \dot{\mathbf{z}}(\mathbf{x}(t), t; \theta)\\
+                  \end{bmatrix} =: \dot{\mathbf{z}}(\mathbf{x}(t), t; \theta)\\
                   \mathbf{z}(0; \theta) :=
                   \begin{bmatrix}
                   \mathbf{x}(0) & \theta
-                  \end{bmatrix}^T
+                  \end{bmatrix}
                   $$
                 </li>
-              </small>
-              <li>
-                One can show: $\partial_{\mathbf{z}(t; \theta)}L (\mathbf{z}(1;
-                \theta)_\mathbf{x}) =: \mathbf{a}(t) = \begin{bmatrix} \partial_{\mathbf{x}(t;
-                \theta)} L & \partial_{\theta(t)} L \end{bmatrix}$ is governed by the ODE
-                <div class="r-stack">
-                  <span class="fragment hide-after-current">
+              </ul>
+              <ul class="fragment">
+                <small>
+                  <li>
+                    Construct new ODE containing $\theta$ as constant
                     $$
-                    \begin{align*}
-                    \frac{d}{dt} \mathbf{a}(t)
-                    &= -\mathbf{a}(t) \cdot \partial_{\mathbf{z}(t; \theta)}
-                    \dot{\mathbf{z}}(\mathbf{x}(t), t; \theta)
-                    \end{align*}
-                    $$
-                  </span>
-                  <span class="fragment hide-after-current">
-                    $$
-                    \begin{align*}
-                    \frac{d}{dt} \mathbf{a}(t)
-                    &= -\mathbf{a}(t) \cdot \underbrace{\partial_{\mathbf{z}(t; \theta)}
-                    \dot{\mathbf{z}}(\mathbf{x}(t), t; \theta)}_{
+                    \frac{d}{dt} \mathbf{z}(t; \theta) :=
                     \begin{bmatrix}
-                    \partial_{\mathbf{z}(t; \theta)} f(\mathbf{x}(t), t; \theta) \\
-                    \mathbf{0} 
-                    \end{bmatrix}}
-                    \end{align*}
+                    f(\mathbf{x}(t), t; \theta) & \mathbf{0}
+                    \end{bmatrix} =: \dot{\mathbf{z}}(\mathbf{x}(t), t; \theta)\\
+                    \mathbf{z}(0; \theta) :=
+                    \begin{bmatrix}
+                    \mathbf{x}(0) & \theta
+                    \end{bmatrix}
                     $$
-                  </span>
-                  <span class="fragment">
-                    $$
-                    \begin{align*}
-                    \frac{d}{dt} \mathbf{a}(t)
-                    &= -\partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(1; \theta)) \cdot \partial_{\mathbf{z}(t; \theta)}
-                    f(\mathbf{x}(t), t; \theta)
-                    \end{align*}
-                    $$
-                  </span>
-                </div>
-              </li>
-            </ul>
+                  </li>
+                </small>
+                <li>
+                  One can show: $\partial_{\mathbf{z}(t; \theta)}L =: \mathbf{a}(t) = \begin{bmatrix} \partial_{\mathbf{x}(t;
+                  \theta)} L & \partial_{\theta(t)} L \end{bmatrix}$ is governed by the ODE
+                  <div class="r-stack">
+                    <span class="fragment fade-in-then-out">
+                      $$
+                      \begin{align*}
+                      \frac{d}{dt} \mathbf{a}(t)
+                      &= -\mathbf{a}(t) \cdot \partial_{\mathbf{z}(t; \theta)}
+                      \dot{\mathbf{z}}(\mathbf{x}(t), t; \theta)
+                      \end{align*}
+                      $$
+                    </span>
+                    <span class="fragment fade-in-then-out">
+                      $$
+                      \begin{align*}
+                      \frac{d}{dt} \mathbf{a}(t)
+                      &= -\mathbf{a}(t) \cdot \underbrace{\partial_{\mathbf{z}(t; \theta)}
+                      \dot{\mathbf{z}}(\mathbf{x}(t), t; \theta)}_{
+                      \begin{bmatrix}
+                      \partial_{\mathbf{z}(t; \theta)} f(\mathbf{x}(t), t; \theta) \\
+                      \mathbf{0} 
+                      \end{bmatrix}}
+                      \end{align*}
+                      $$
+                    </span>
+                    <span class="fragment fade-in-then-out">
+                      $$
+                      \begin{align*}
+                      \frac{d}{dt} \mathbf{a}(t)
+                      &= -\partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(1; \theta)) \cdot \partial_{\mathbf{z}(t; \theta)}
+                      f(\mathbf{x}(t), t; \theta)
+                      \end{align*}
+                      $$
+                    </span>
+                    <span class="fragment">
+                      $$
+                      \begin{align*}
+                      \frac{d}{dt} \mathbf{a}(t)
+                      &= -\partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(1; \theta)) \cdot \partial_{\mathbf{z}(t; \theta)}
+                      f(\mathbf{x}(t), t; \theta) \\
+                      \mathbf{a}(1) &= \begin{bmatrix} \partial_{\mathbf{x}(1; \theta)} L & \mathbf{0} \end{bmatrix}
+                      \end{align*}
+                      $$
+                    </span>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </section>
           <section data-auto-animate>
             <h3>Adjoint Method</h3>
@@ -347,11 +426,11 @@
                   \frac{d}{dt} \mathbf{z}(t; \theta) :=
                   \begin{bmatrix}
                   f(\mathbf{x}(t), t; \theta) & \mathbf{0}
-                  \end{bmatrix}^T =: \dot{\mathbf{z}}(\mathbf{x}(t), t; \theta)\quad\quad
+                  \end{bmatrix} =: \dot{\mathbf{z}}(\mathbf{x}(t), t; \theta)\quad\quad
                   \mathbf{z}(0; \theta) :=
                   \begin{bmatrix}
                   \mathbf{x}(0) & \theta
-                  \end{bmatrix}^T
+                  \end{bmatrix}
                   $
                 </li>
                 <li>
@@ -369,195 +448,268 @@
             </small>
 
             Then we can compute
-            <div class="fragment hide-after-current" style="font-size: 70%;">
-              $$
-              \begin{align*}
-              \mathbf{a}(0) &= \overbrace{\mathbf{a}(1)}^{\begin{bmatrix} \partial_{\mathbf{x}(1; \theta)} L & \partial_\theta L \end{bmatrix}^T}  - \int_1^0 \mathbf{a}(t) \cdot \partial_{\mathbf{z}(t; \theta)}
-              \dot{\mathbf{z}}(\mathbf{x}(t), t; \theta) dt \\
-              \phantom{\partial_\theta L(\mathbf{x}(1; \theta))}&\phantom{
-              = \mathbf{a}(0)_\theta = \mathbf{0} - \int_1^0 \partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(t; \theta)) \cdot \partial_\theta f(\mathbf{x}(t), t; \theta) dt
-              }
-              \end{align*}
-              $$
-            </div>
-            <div class="fragment hide-after-current" style="font-size: 70%;">
-              $$
-              \begin{align*}
-              \mathbf{a}(0) &= \mathbf{a}(1) - \int_1^0 \partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(t;
-              \theta)) \cdot \partial_{\mathbf{z}(t; \theta)} f(\mathbf{x}(t), t; \theta) dt \\
-              \phantom{\partial_\theta L(\mathbf{x}(1; \theta))}&\phantom{
-              = \mathbf{a}(0)_\theta = \mathbf{0} - \int_1^0 \partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(t; \theta)) \cdot \partial_\theta f(\mathbf{x}(t), t; \theta) dt
-              }
-              \end{align*}
-              $$
-            </div>
-            <div class="fragment hide-after-current" style="font-size: 70%;">
-              $$
-              \begin{align*}
-              \mathbf{a}(0) &= \mathbf{a}(1) - \int_1^0 \partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(t;
-              \theta)) \cdot \partial_{\mathbf{z}(t; \theta)} f(\mathbf{x}(t), t; \theta) dt \\
-              \partial_\theta L(\mathbf{x}(1; \theta)) &= \partial_\theta L(\mathbf{z}(1; \theta)_\mathbf{x})
-              \end{align*}
-              $$
-            </div>
-            <div class="fragment hide-after-current" style="font-size: 70%;">
-              $$
-              \begin{align*}
-              \mathbf{a}(0) &= \mathbf{a}(1) - \int_1^0 \partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(t;
-              \theta)) \cdot \partial_{\mathbf{z}(t; \theta)} f(\mathbf{x}(t), t; \theta) dt \\
-              \partial_\theta L(\mathbf{x}(1; \theta)) &= \mathbf{a}(0)_\theta = \mathbf{0} - \int_1^0 \partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(t; \theta)) \cdot \partial_\theta f(\mathbf{x}(t), t; \theta) dt
-              \end{align*}
-              $$
-            </div>
-            <div class="fragment hide-after-current" style="font-size: 70%;">
-              $$
-              \begin{align*}
-              \mathbf{a}(0) &= \mathbf{a}(1) - \int_1^0 \partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(t;
-              \theta)) \cdot \partial_{\mathbf{z}(t; \theta)} f(\mathbf{x}(t), t; \theta) dt \\
-              \partial_\theta L(\mathbf{x}(1; \theta)) &= \mathbf{a}(0)_\theta = \mathbf{0} - \int_1^0 \partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(t; \theta)) \cdot \partial_\theta f(\mathbf{x}(t), t; \theta) dt \\
-              \partial_{\mathbf{x}(0; \theta)} L(\mathbf{x}(1; \theta)) &= \mathbf{a}(0)_\mathbf{x} \hspace{6em}\text{(for backprop. to upper layers)}
-              \end{align*}
-              $$
-            </div>
-            <div class="fragment" style="font-size: 70%;">
-              $$
-              \begin{align*}
-              \mathbf{a}(0) &= \mathbf{a}(1) - \overbrace{\int_1^0 \partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(t;
-              \theta)) \cdot \partial_{\mathbf{z}(t; \theta)} f(\mathbf{x}(t), t; \theta) dt}^{n + p\ \ll\ p \times p \text{ with } \theta \in \mathbb{R}^p,\ \mathbf{x} \in \mathbb{R}^n,\ p \gg n} \\
-              \partial_\theta L(\mathbf{x}(1; \theta)) &= \mathbf{a}(0)_\theta = \mathbf{0} - \int_1^0 \partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(t; \theta)) \cdot \partial_\theta f(\mathbf{x}(t), t; \theta) dt \\
-              \partial_{\mathbf{x}(0; \theta)} L(\mathbf{x}(1; \theta)) &= \mathbf{a}(0)_\mathbf{x} \hspace{6em}\text{(for backprop. to upper layers)}
-              \end{align*}
-              $$
-              <ul>
-                <li>Integrating over $n + p$ vector, much more efficient than over $p \times p$ Jacobian</li>
-                <li>vector-Jacobian product inside integral efficiently computed by reverse-mode autodiff (backpropagation)</li>
-              </ul>
+            <div class="r-stack">
+              <div class="fragment fade-in-then-out" style="font-size: 70%;">
+                $$
+                \begin{align*}
+                \mathbf{a}(0) &= \overbrace{\mathbf{a}(1)}^{\begin{bmatrix} \partial_{\mathbf{x}(1; \theta)} L & \mathbf{0} \end{bmatrix}}  - \int_1^0 \mathbf{a}(t) \cdot \partial_{\mathbf{z}(t; \theta)}
+                \dot{\mathbf{z}}(\mathbf{x}(t), t; \theta) dt \\
+                \phantom{\partial_\theta L(\mathbf{x}(1; \theta))}&\phantom{
+                = \mathbf{a}(0)_\theta = \mathbf{0} - \int_1^0 \partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(t; \theta)) \cdot \partial_\theta f(\mathbf{x}(t), t; \theta) dt
+                }
+                \end{align*}
+                $$
+              </div>
+              <div class="fragment fade-in-then-out" style="font-size: 70%;">
+                $$
+                \begin{align*}
+                \mathbf{a}(0) &= \mathbf{a}(1) - \int_1^0 \partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(t;
+                \theta)) \cdot \partial_{\mathbf{z}(t; \theta)} f(\mathbf{x}(t), t; \theta) dt \\
+                \phantom{\partial_\theta L(\mathbf{x}(1; \theta))}&\phantom{
+                = \mathbf{a}(0)_\theta = \mathbf{0} - \int_1^0 \partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(t; \theta)) \cdot \partial_\theta f(\mathbf{x}(t), t; \theta) dt
+                }
+                \end{align*}
+                $$
+              </div>
+              <div class="fragment fade-in-then-out" style="font-size: 70%;">
+                $$
+                \begin{align*}
+                \mathbf{a}(0) &= \mathbf{a}(1) - \int_1^0 \partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(t;
+                \theta)) \cdot \partial_{\mathbf{z}(t; \theta)} f(\mathbf{x}(t), t; \theta) dt \\
+                \partial_\theta L(\mathbf{x}(1; \theta)) &= \partial_\theta L(\mathbf{z}(1; \theta)_\mathbf{x})
+                \end{align*}
+                $$
+              </div>
+              <div class="fragment fade-in-then-out" style="font-size: 70%;">
+                $$
+                \begin{align*}
+                \mathbf{a}(0) &= \mathbf{a}(1) - \int_1^0 \partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(t;
+                \theta)) \cdot \partial_{\mathbf{z}(t; \theta)} f(\mathbf{x}(t), t; \theta) dt \\
+                \partial_\theta L(\mathbf{x}(1; \theta)) &= \mathbf{a}(0)_\theta = \mathbf{0} - \int_1^0 \partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(t; \theta)) \cdot \partial_\theta f(\mathbf{x}(t), t; \theta) dt
+                \end{align*}
+                $$
+              </div>
+              <div class="fragment fade-in-then-out" style="font-size: 70%;">
+                $$
+                \begin{align*}
+                \mathbf{a}(0) &= \mathbf{a}(1) - \int_1^0 \partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(t;
+                \theta)) \cdot \partial_{\mathbf{z}(t; \theta)} f(\mathbf{x}(t), t; \theta) dt \\
+                \partial_\theta L(\mathbf{x}(1; \theta)) &= \mathbf{a}(0)_\theta = \mathbf{0} - \int_1^0 \partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(t; \theta)) \cdot \partial_\theta f(\mathbf{x}(t), t; \theta) dt \\
+                \partial_{\mathbf{x}(0; \theta)} L(\mathbf{x}(1; \theta)) &= \mathbf{a}(0)_\mathbf{x} \hspace{6em}\text{(for backprop. to upper layers)}
+                \end{align*}
+                $$
+              </div>
+              <div class="fragment" style="font-size: 70%;">
+                $$
+                \begin{align*}
+                \mathbf{a}(0) &= \mathbf{a}(1) - \overbrace{\int_1^0 \partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(t;
+                \theta)) \cdot \partial_{\mathbf{z}(t; \theta)} f(\mathbf{x}(t), t; \theta) dt}^{n + p\ \ll\ p \times p \text{ with } \theta \in \mathbb{R}^p,\ \mathbf{x} \in \mathbb{R}^n,\ p \gg n} \\
+                \partial_\theta L(\mathbf{x}(1; \theta)) &= \mathbf{a}(0)_\theta = \mathbf{0} - \int_1^0 \partial_{\mathbf{x}(t; \theta)} L(\mathbf{x}(t; \theta)) \cdot \partial_\theta f(\mathbf{x}(t), t; \theta) dt \\
+                \partial_{\mathbf{x}(0; \theta)} L(\mathbf{x}(1; \theta)) &= \mathbf{a}(0)_\mathbf{x} \hspace{6em}\text{(for backprop. to upper layers)}
+                \end{align*}
+                $$
+                <ul>
+                  <li>Integrating over $n + p$ vector, not $p \times p$ Jacobian</li>
+                </ul>
+              </div>
             </div>
           </section>
           <section data-auto-animate>
             <h3>Adjoint Method</h3>
             <video data-manim="adjoint-method/1080p60/AdjointMethod"></video>
           </section>
+          <section>
+            <h3>Adjoint Method</h3>
+            <ul>
+              <li class="fragment">Established method for computing $\partial_\theta
+                L(\mathrm{ODE}(t_0, t_1; \theta)),\ L: \mathbb{R}^n \to
+                \mathbb{R}$</li>
+              <li class="fragment">New: Application to neural networks with <em>many</em> parameters</li>
+            </ul>
+          </section>
         </section>
         <section>
-          <section style="height: 555px;">
+          <section data-auto-animate>
+            <h3>Learning an unknown ODE</h3>
+            <video data-manim="spiral-sample/1080p60/SpiralSample" height="600px"></video>
+          </section>
+          <section data-auto-animate>
+            <h3>Learning an unknown ODE</h3>
+            Our task:
+            <br>
+            <ul>
+              <li class="fragment">Given data points $\mathbf{x_i}(t_j)$</li>
+              <li class="fragment">Learn ODE to extrapolate $\mathbf{x_i}(t)$ for all $t$</li>
+              <li class="fragment">Loss: $||\mathbf{x_i}(t_j) - \mathrm{ODE}(\mathbf{x_i}(0), t_j)||_2$
+                <ul>
+                  <li>MSE between data and learned trajectory at points $t_j$</li>
+                </ul>
+              </li>
+            </ul>
+          </section>
+          <section>
             <div class="r-stack">
-              <pre style="height: 515px;" class="fragment fade-out">
-                <code data-trim data-line-numbers="7-12" class="language-python">
+              <pre style="height: 605px;" class="fragment fade-out">
+                <code data-trim data-line-numbers="8-13" class="language-python">
 class ODENet(nn.Module):
-    def __init__(self):
+    def __init__(self, dim=4, hidden_dim=8):
         super(ODENet, self).__init__()
-        self.dense0 = nn.Linear(64, 64)
-        self.dense1 = nn.Linear(64, 64)
+        self.dense0 = nn.Linear(dim + 1, hidden_dim)
+        self.dense1 = nn.Linear(hidden_dim + 1, hidden_dim)
+        self.dense2 = nn.Linear(hidden_dim + 1, dim)
 
+    # ODE on 4-dimensional state space
     def forward(self, t, x):
-        x = self.dense0(F.batch_norm(augment_time(x, t)))
-        x = F.batch_norm(F.ReLU(x))
-        x = self.dense1(augment_time(x, t))
-        x = F.batch_norm(F.ReLU(x))
+        x = F.elu(self.dense0(append_time(t, x)))
+        x = F.elu(self.dense1(append_time(t, x)))
+        x = F.elu(self.dense2(append_time(t, x)))
         return x
 
 class Net(nn.Module):
-    def __init__(self):
+    def __init__(self, ode_dim=4):
         super(Net, self).__init__()
-        self.dt = ODENet()
-        self.output = nn.Linear(64, 2)
+        self.dense0 = nn.Linear(2, ode_dim)
+        self.ode = ODENet(ode_dim)
+        self.dense1 = nn.Linear(ode_dim, 2)
 
-    def forward(x):
-        # integrate to get x at time 1
-        [_, x] = odeint(self.dt, x, torch.tensor([0., 1.]))
-        x = self.output(x)
-        return F.softmax(x)
+    def forward(self, x, t):
+        # map into 4-dim. state space of ODE
+        x = F.elu(self.dense0(x))
+        # integrate to obtain target points x(t)
+        x = odeint(self.ode, x, t).permute(1, 0, 2)
+        x = self.dense1(x)
+        return x
                 </code>
               </pre>
-              <pre style="height: 515px;" data-fragment-index="1" class="fragment fade-in">
-                <code data-trim data-line-numbers="20-24" class="language-python">
+              <pre style="height: 605px;" data-fragment-index="1" class="fragment fade-in">
+                <code data-trim data-line-numbers="22-28" class="language-python">
 class ODENet(nn.Module):
-    def __init__(self):
+    def __init__(self, dim=4, hidden_dim=8):
         super(ODENet, self).__init__()
-        self.dense0 = nn.Linear(64, 64)t
-        self.dense1 = nn.Linear(64, 64)
+        self.dense0 = nn.Linear(dim + 1, hidden_dim)
+        self.dense1 = nn.Linear(hidden_dim + 1, hidden_dim)
+        self.dense2 = nn.Linear(hidden_dim + 1, dim)
 
+    # ODE on 4-dimensional state space
     def forward(self, t, x):
-        x = self.dense0(F.batch_norm(augment_time(x, t)))
-        x = F.batch_norm(F.ReLU(x))
-        x = self.dense1(augment_time(x, t))
-        x = F.batch_norm(F.ReLU(x))
+        x = F.elu(self.dense0(append_time(t, x)))
+        x = F.elu(self.dense1(append_time(t, x)))
+        x = F.elu(self.dense2(append_time(t, x)))
         return x
 
 class Net(nn.Module):
-    def __init__(self):
+    def __init__(self, ode_dim=4):
         super(Net, self).__init__()
-        self.dt = ODENet()
-        self.output = nn.Linear(64, 2)
+        self.dense0 = nn.Linear(2, ode_dim)
+        self.ode = ODENet(ode_dim)
+        self.dense1 = nn.Linear(ode_dim, 2)
 
-    def forward(x):
-        # integrate to get x at time 1
-        [_, x] = odeint(self.dt, x, torch.tensor([0., 1.]))
-        x = self.output(x)
-        return F.softmax(x)
+    def forward(self, x, t):
+        # map into 4-dim. state space of ODE
+        x = F.elu(self.dense0(x))
+        # integrate to obtain target points x(t)
+        x = odeint(self.ode, x, t).permute(1, 0, 2)
+        x = self.dense1(x)
+        return x
                 </code>
               </pre>
             </div>
           </section>
           <section>
-            <h3>Use cases</h3>
-            <ul>
-              <li class="fragment">Predicting time series data</li>
-              <li class="fragment">Replacing ResNets
-                <ul>
-                  <li>ResNet: $\mathbf{x_{n + 1}} = \mathbf{x_n} + f(\mathbf{x})$ looks like step in Euler ODE solver</li>
-                  <li>Motivates (with some mental gymnastics) playing with ODE nets instead of ResNets</li>
-                </ul>
-              </li>
-              <li class="fragment">Many others, many follow-up papers</li>
-            </ul>
+            <div class="r-stack">
+              <img src="media/spiral-ode-net.png"></img>
+              <img class="fragment" src="media/poop_emoji.svg" height="300px"></img>
+            </div>
           </section>
           <section>
-            <h3>Predicting Time Series</h3>
-            Given some (irregularly sampled) time series data points
-            $((\mathbf{x_i}_{,t})_{t \in \mathbf{t_i}}, \mathbf{t_i})_{i \in
-            [n]}$:
+            <h3>Learning an unknown ODE</h3>
+            Our task was:
             <br>
-            learn ODE such that $\mathbf{x_i}_{,t} \approx \int_0^t f(\mathbf{x_i}(\tau), \tau; \theta) d\tau$
-
-            <ul class="fragment">
-              <li>Why start at $t = 0$? Does this make sense?</li>
-              <li>For prediction, input can be time series
-              $\mathbf{x}(0), \ldots, \mathbf{x}(T)$. How to incorporate all
-              these datapoints into the prediction?</li>
-            </ul>
-          </section>
-          <section data-auto-animate>
-            <h3>Predicting Time Series</h3>
-
-            Idea: Use a <em>latent ODE</em>
             <ul>
-              <li class="fragment">encode input time series into latent initial state $\mathbf{z}(0)$</li>
-              <li class="fragment">evolve in latent space to $\mathbf{z}(T)$</li>
-              <li class="fragment">decode $\mathbf{z}(T)$ back into data space as $\mathbf{x}(T)$</li>
+              <li>Given data points $\mathbf{x_i}(t_j)$</li>
+              <li>Learn ODE to extrapolate $\mathbf{x_i}(t)$ for all $t$</li>
+              <li>Loss: $||\mathbf{x_i}(t_j) - \mathrm{ODE}(\mathbf{x_i}(0), t_j)||_2$
+                <ul>
+                  <li>MSE between data and learned trajectory at points $t_j$</li>
+                </ul>
+              </li>
+              <li class="fragment">Problem: hopeless to find a good optimum with this loss</li>
+              <li class="fragment">Problem #2: Want prediction to take all inputs $\mathbf{x}(t_1), \ldots, \mathbf{x}(t_k)$ into account</li>
             </ul>
-             
+          </section>
+        </section>
+        <section>
+          <section data-auto-animate>
+            <h3>Generative Model for time series</h3>
+            For prediction, we want:
+            <br>
+            <ul>
+              <li class="fragment">Input: points $\mathbf{x}(t_1), \ldots, \mathbf{x}(t_k)$</li>
+              <li class="fragment">$t_i$ can be arbitrary</li>
+              <li class="fragment">Can be of different classes
+                <ul>
+                  <li>Clockwise Spiral</li>
+                  <li>Counter-Clockwise Spiral</li>
+                </ul>
+              </li>
+              <li class="fragment">Output: $\mathbb{P}[\mathbf{x}(t) \mid \mathbf{x}(t_1), \ldots, \mathbf{x}(t_k)]$</li>
+            </ul>
           </section>
           <section data-auto-animate>
-            <h3>Predicting Time Series</h3>
+            <h3>Generative Model for time series</h3>
+            Ansatz:<br>
+            <ul>
+              <li class="fragment">Map input into latent space $\mathbb{P}[\mathbf{z}(0) \mid \mathbf{x}(t_1), \ldots, \mathbf{x}(t_k)]$</li>
+              <li class="fragment">Evolve in latent space to $\mathbf{z}(T)$</li>
+              <li class="fragment">Map $\mathbf{z}(T)$ back into data space as $\mathbb{P}[\mathbf{x}(T) \mid \mathbf{z}(T)]$</li>
+            </ul>
+          </section>
+          <section data-auto-animate>
+            <h3>Generative Model for time series</h3>
 
             <video data-manim="latent-ode/1080p60/LatentODE"></video>
+            <ul class="fragment">
+              <li><em>Variational Autoencoder</em></li>
+              <li>Use something like KL divergence to train</em></li>
+            </ul>
           </section>
+          <section data-auto-animate>
+            <h3>Generative Model for time series</h3>
+            <img src="media/vae-vis.png"></img>
+          </section>
+          <section data-auto-animate>
+            <h3>Generative Model for time series</h3>
+            <img src="media/vae-vis-paper.png" class="shadow" height="550px"></img>
+          </section>
+        </section>
+        <section>
+          <h3>Non-Obvious Use Cases</h3>
+          Besides modelling time series data, we can<br>
+          <ul>
+            <li class="fragment" data-fragment-index="0">Replace ResNets
+              <ul>
+                <li class="fragment" data-fragment-index="1">ResNet: $\mathbf{x_{n + 1}} = \mathbf{x_n} + f(\mathbf{x})$ looks like step in Euler ODE solver</li>
+                <li class="fragment" data-fragment-index="2">Motivates (with some mental gymnastics) playing with ODE nets instead of ResNets</li>
+                <li class="fragment" data-fragment-index="3">Can use convolutional layers</li>
+              </ul>
+            </li>
+            <li class="fragment" data-fragment-index="4">Maybe faster <em>normalizing flows</em> training (won't go into this)</li>
+            <li class="fragment" data-fragment-index="4">Many other follow up papers</li>
+          </ul>
         </section>
         <section>
           <section data-auto-animate>
             <h3>Difficulties with Neural ODEs</h3>
             <ul>
-              <li class="fragment"><b>Stiffness</b>: Recall that stiff IVPs cause some integrators to diverge exponentially
+              <li class="fragment"><b>Stiffness</b>: Recall: Stiff ODEs cause solvers to diverge exponentially
                 <ul>
-                  <li class="fragment">Remedied by using (expensive, typically implicit) integrators with <em>absolute stability</em></li>
-                  <li class="fragment">Cannot know if/when the learned ODE is stiff during or after training</li>
+                  <li class="fragment">Remedied by (expensive, typically implicit) integrators (recall: <em>absolute stability</em>)</li>
+                  <li class="fragment">Cannot know if learned ODE is stiff</li>
                   <li class="fragment">Must assume worst-case; always use expensive, <em>L-stable</em> integrators (painfully slow! 12h for MNIST)</li>
                 </ul>
               </li>
               <li class="fragment">
-                <b>Optimization</b>: Need to investige different heuristics for good initializations and gradient descent algorithms
+                <b>Optimization</b>: Adam etc. might not work so well
               </li>
             </ul>
           </section>
@@ -571,22 +723,31 @@ class Net(nn.Module):
             <h3>Follow-Up research</h3>
             <div>
               <figure class="r-stack">
-                <img src="media/time-reversal-ode.png" data-fragment-index="0" width="370px" class="fragment hide-after-current shadow" />
+                <img src="media/time-reversal-ode.png" data-fragment-index="0" width="370px" class="fragment fade-in-then-out shadow" />
                 <img src="media/time-reversal-ode.png" data-fragment-index="1" width="370px" style="transform: rotate(3deg);" class="fragment shadow" />
-                <img src="media/stochastic-odes.png" data-fragment-index="1" width="370px" class="fragment hide-after-current shadow" />
+                <img src="media/stochastic-odes.png" data-fragment-index="1" width="370px" class="fragment fade-in-then-out shadow" />
                 <img src="media/stochastic-odes.png" data-fragment-index="2" width="370px" style="transform: rotate(-3deg);" class="fragment shadow" />
-                <img src="media/normalizing-flow.png" data-fragment-index="2" width="370px" class="fragment hide-after-current shadow" />
+                <img src="media/normalizing-flow.png" data-fragment-index="2" width="370px" class="fragment fade-in-then-out shadow" />
                 <img src="media/normalizing-flow.png" data-fragment-index="3" width="370px" style="transform: rotate(+5deg); z-index: -1;" class="fragment shadow" />
                 <img src="media/easy-to-solve.png" data-fragment-index="3" width="370px" class="fragment shadow" />
               </figure>
-                <figcaption data-fragment-index="0" class="fragment hide-after-current">Accelerate physics simulations by learning approximating ODE net and enforcing physical time-symmetry constraint</figcaption>
-                <figcaption data-fragment-index="1" class="fragment hide-after-current">Using stochastic differential equations (SDEs) instead of ODEs</figcaption>
-                <figcaption data-fragment-index="2" class="fragment hide-after-current">Potentially more efficient training of <em>normalizing flows</em>, a kind of generative model trained as a bijection onto e.g. a normal distribution.</figcaption>
-                <figcaption data-fragment-index="3" class="fragment">Smoother ODEs are faster to train - hence regularising higher derivatives of the ODE to 0 increases training performance.</figcaption>
+              <div class="r-stack">
+                <figcaption data-fragment-index="0" class="fragment fade-in-then-out">Accelerate
+                  physics simulations by learning approximating ODE net and
+                  enforcing physical time-symmetry constraint</figcaption>
+                <figcaption data-fragment-index="1" class="fragment fade-in-then-out">Using
+                  stochastic differential equations (SDEs) instead of ODEs</figcaption>
+                <figcaption data-fragment-index="2" class="fragment fade-in-then-out">Potentially more efficient training of <em>normalizing flows</em>,
+                  a kind of generative model trained as a bijection onto e.g. a
+                  normal distribution.</figcaption>
+                <figcaption data-fragment-index="3" class="fragment">Smoother
+                  ODEs are faster to train - hence regularising higher derivatives
+                  of the ODE to 0 increases training performance.</figcaption>
+              </div>
             </div>
           </section>
         </section>
-          <section>
+        <section>
             <h3>This is the end</h3>
             <h4>Summary</h4>
             <ul>
@@ -595,7 +756,7 @@ class Net(nn.Module):
               <li>Many interesting cases of ODE networks</li>
               <li>But also many challenges and open questions</li>
             </ul>
-          </section>
+        </section>
 			</div>
 		</div>
 
@@ -612,6 +773,7 @@ class Net(nn.Module):
 		 // - https://revealjs.com/config/
 		 Reveal.initialize({
        transitionSpeed: 'fast',
+       slideNumber: true,
        
 			 hash: true,
 

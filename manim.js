@@ -11,7 +11,7 @@
  * on slides and a `data-fragment-relayout` on fragments.
  *
  * Copyright (C) 2020, Henrik Laxhuber
-**/
+ **/
 
 function concat_paths() {
   const REPLACE_RE = /\/{1,}/g;
@@ -64,18 +64,27 @@ export default () => {
                 const VIDEO_FILE_RE = /(([0-9]|_)*\.mp4)\'$/;
                 const video = VIDEO_FILE_RE.exec(line);
                 if (!video) return;
-                console.log(video);
                 urls.push(concat_paths(base_path, video[1]));
               });
               return urls;
             })
             .then(urls => {
               var div = document.createElement("div");
-              urls.forEach(url => {
+              div.classList.add("r-stack");
+              urls.forEach((url, idx) => {
                 var video = document.createElement("video");
                 video.src = url;
-                video.classList.add("fragment", "hide-after-current");
+                video.classList.add("fragment");
+                if (idx < urls.length - 1)
+                  video.classList.add("hide-after-current");
                 video.dataset.autoplayFragment = true;
+                video.dataset.fragmentIndex = idx;
+
+                ["width", "height"].forEach(attr => {
+                  if (manim.hasAttribute(attr))
+                    video.setAttribute(attr, manim.getAttribute(attr));
+                });
+
                 div.appendChild(video);
               });
 
@@ -83,6 +92,20 @@ export default () => {
               manim.closest("section").dataset.relayout = true;
 
               manim.replaceWith(div);
+
+              var node = div;
+              var idx = urls.length + 1;
+              while (node) {
+                if (node.classList.contains("fragment")) {
+                  const fragmentIndex = parseInt(node.dataset.fragmentIndex);
+                  node.dataset.fragmentIndex = fragmentIndex + idx;
+                  idx += 1;
+
+                  console.log(`Updated fragment index of ${node}`);
+                }
+                node = node.nextElementSibling;
+              }
+
               console.log(`${manim.dataset.manim} complete.`);
             });
         });
@@ -104,14 +127,14 @@ export default () => {
 
         if (
           event.fragment.play &&
-            event.fragment.hasAttribute("data-autoplay-fragment")
+          event.fragment.hasAttribute("data-autoplay-fragment")
         )
           event.fragment.play();
       });
       Reveal.addEventListener("fragmenthidden", event => {
         if (
           event.fragment.pause &&
-            event.fragment.hasAttribute("data-autoplay-fragment")
+          event.fragment.hasAttribute("data-autoplay-fragment")
         ) {
           event.fragment.pause();
           event.fragment.currentTime = 0;

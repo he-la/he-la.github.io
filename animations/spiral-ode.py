@@ -14,13 +14,11 @@ Dot.CONFIG['color'] = PINK
 config["frame_height"] = 10
 config["frame_width"] = 10
 
+
 class SpiralODE(MovingCameraScene):
     def construct(self):
-        ode = np.array([[-0.2, -1.0],
-                        [1.0, -0.2]])
-        ode3d = np.array([[-0.2, -1.0, 0],
-                        [1.0, -0.2, 0],
-                        [0, 0, 0]])
+        ode = np.array([[-0.2, -1.0], [1.0, -0.2]])
+        ode3d = np.array([[-0.2, -1.0, 0], [1.0, -0.2, 0], [0, 0, 0]])
 
         ode3d_func = lambda pt: ode3d @ pt
 

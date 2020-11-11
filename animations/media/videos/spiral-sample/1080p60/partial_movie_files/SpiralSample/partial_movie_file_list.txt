@@ -1,0 +1,3 @@
+# This file is used internally by FFMPEG.
+file 'file:/home/henrik/docs/ml-seminar/presentation/animations/media/videos/spiral-sample/1080p60/partial_movie_files/SpiralSample/4069562471_2959719147_1627385994.mp4'
+file 'file:/home/henrik/docs/ml-seminar/presentation/animations/media/videos/spiral-sample/1080p60/partial_movie_files/SpiralSample/293033764_46753212_1796374752.mp4'

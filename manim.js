@@ -30,87 +30,84 @@ export default () => {
         console.error("manim configuration invalid.");
         return;
       }
-      Reveal.addEventListener("ready", event => {
-        document.querySelectorAll("video[data-manim]").forEach(manim => {
-          const PATH_RE = /^([^\/]+)\/([0-9]{3,4}p[0-9]{2})\/([^\/]+)$/;
-          const path = PATH_RE.exec(manim.dataset.manim); // e.g. '<pyname>/1080p60/<scenename>'
-          // should resolve to '<root>/<pyname>/1080p60/partial_movie_files/<scenename>'
-          if (!path || path.length != 4) {
-            console.error("manim path '" + manim.dataset.mainm + "' invalid.");
-            return;
-          }
+      document.querySelectorAll("video[data-manim]").forEach(manim => {
+        const PATH_RE = /^([^\/]+)\/([0-9]{3,4}p[0-9]{2})\/([^\/]+)$/;
+        const path = PATH_RE.exec(manim.dataset.manim); // e.g. '<pyname>/1080p60/<scenename>'
+        // should resolve to '<root>/<pyname>/1080p60/partial_movie_files/<scenename>'
+        if (!path || path.length != 4) {
+          console.error("manim path '" + manim.dataset.mainm + "' invalid.");
+          return;
+        }
 
-          const base_path = concat_paths(
-            config.root,
-            path[1],
-            path[2],
-            "partial_movie_files",
-            path[3]
-          );
+        const base_path = concat_paths(
+          config.root,
+          path[1],
+          path[2],
+          "partial_movie_files",
+          path[3]
+        );
 
-          fetch(
-            new Request(concat_paths(base_path, "partial_movie_file_list.txt"))
-          )
-            .then(response => {
-              if (!response.ok)
-                console.error(
-                  `failed to fetch partials for ${manim.dataset.manim}`
-                );
-              return response.text();
-            })
-            .then(data => {
-              var urls = [];
-              data.split("\n").forEach(line => {
-                const VIDEO_FILE_RE = /(([0-9]|_)*\.mp4)\'$/;
-                const video = VIDEO_FILE_RE.exec(line);
-                if (!video) return;
-                urls.push(concat_paths(base_path, video[1]));
-              });
-              return urls;
-            })
-            .then(urls => {
-              var div = document.createElement("div");
-              div.classList.add("r-stack");
-              urls.forEach((url, idx) => {
-                var video = document.createElement("video");
-                video.src = url;
-                video.classList.add("fragment");
-                if (idx < urls.length - 1)
-                  video.classList.add("hide-after-current");
-                video.dataset.autoplayFragment = true;
-                video.dataset.fragmentIndex = idx;
-
-                ["width", "height"].forEach(attr => {
-                  if (manim.hasAttribute(attr))
-                    video.setAttribute(attr, manim.getAttribute(attr));
-                });
-
-                div.appendChild(video);
-              });
-
-              div.firstChild.dataset.fragmentRelayout = true;
-              manim.closest("section").dataset.relayout = true;
-
-              manim.replaceWith(div);
-
-              var node = div;
-              var idx = urls.length + 1;
-              while (node) {
-                if (node.classList.contains("fragment")) {
-                  const fragmentIndex = parseInt(node.dataset.fragmentIndex);
-                  node.dataset.fragmentIndex = fragmentIndex + idx;
-                  idx += 1;
-
-                  console.log(`Updated fragment index of ${node}`);
-                }
-                node = node.nextElementSibling;
-              }
-
-              console.log(`${manim.dataset.manim} complete.`);
+        fetch(
+          new Request(concat_paths(base_path, "partial_movie_file_list.txt"))
+        )
+          .then(response => {
+            if (!response.ok)
+              console.error(
+                `failed to fetch partials for ${manim.dataset.manim}`
+              );
+            return response.text();
+          })
+          .then(data => {
+            var urls = [];
+            data.split("\n").forEach(line => {
+              const VIDEO_FILE_RE = /(([0-9]|_)*\.mp4)\'$/;
+              const video = VIDEO_FILE_RE.exec(line);
+              if (!video) return;
+              urls.push(concat_paths(base_path, video[1]));
             });
-        });
-      });
+            return urls;
+          })
+          .then(urls => {
+            var div = document.createElement("div");
+            div.classList.add("r-stack");
+            urls.forEach((url, idx) => {
+              var video = document.createElement("video");
+              video.src = url;
+              video.classList.add("fragment");
+              if (idx < urls.length - 1)
+                video.classList.add("hide-after-current");
+              video.dataset.autoplayFragment = true;
+              video.dataset.fragmentIndex = idx;
 
+              ["width", "height"].forEach(attr => {
+                if (manim.hasAttribute(attr))
+                  video.setAttribute(attr, manim.getAttribute(attr));
+              });
+
+              div.appendChild(video);
+            });
+
+            div.firstChild.dataset.fragmentRelayout = true;
+            manim.closest("section").dataset.relayout = true;
+
+            manim.replaceWith(div);
+
+            var node = div;
+            var idx = urls.length + 1;
+            while (node) {
+              if (node.classList.contains("fragment")) {
+                const fragmentIndex = parseInt(node.dataset.fragmentIndex);
+                node.dataset.fragmentIndex = fragmentIndex + idx;
+                idx += 1;
+
+                console.log(`Updated fragment index of ${node}`);
+              }
+              node = node.nextElementSibling;
+            }
+
+            console.log(`${manim.dataset.manim} complete.`);
+          });
+      });
       function relayout() {
         // send window resize event to force relayout
         var evt = document.createEvent("UIEvents");
